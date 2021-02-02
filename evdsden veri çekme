@@ -1,0 +1,43 @@
+print(' Düzey = 0 \n Yüzdesel Değişim = 1 \n Fark = 2 \n Yıllık Yüzde Değişim = 3')
+print(' Yıllık Fark = 4 \n Bir Önceki Yılın Sonuna Göre Yüzde Değişim = 5 ')
+print(' Bir Önceki Yılın Sonuna Göre Fark = 6 \n Hareketli Ortalama = 7')
+print(' Hareketli Toplam = 8')
+FORMUL = int(input('Kullanmak istediğiniz formül = '))
+
+print(' Günlük = 1 \n İşgünü = 2 \n Haftalık = 3 \n Ayda İki Kez = 4 \n Aylık = 5')
+print(' Çeyreklik = 6 \n 6 Aylık = 7 \n Yıllık = 8')
+FREKANS = int(input('Serinin frekansı ='))
+print('\n \n')
+
+BASLANGICAY = input('Başlangıç tarihi ay = ')
+BASLANGICYIL = input ('Başlangıç tarihi yıl = ')
+BITISAY = input('Bitis tarihi ay = ')
+BITISYIL = input('Bitiş tarihi yıl =')
+
+import pandas as pd
+from evds import evdsAPI
+evds = evdsAPI('zdbBZrbWwG')
+
+   
+VERI = ['GSYIH','TÜFE','SANAYIURETIM','CARIISLEM']
+dataframeler = ['A','B','C','D']
+
+KOD = ['TP.GSYIH26.HY.ZH','TP.FG.J0','TP.SANAYREV4.Y1','TP.ODEAYRSUNUM6.Q1']
+
+
+for i in range(len(VERI)):
+    dataframeler[i] = evds.get_data([KOD[i]], startdate='01-'+BASLANGICAY+'-'+BASLANGICYIL, 
+                   enddate='01-'+BITISAY+'-'+BITISYIL, formulas = [FORMUL], frequency
+                  = FREKANS).drop(columns = 'Tarih')
+
+if input(VERI[0]+' verisini kullanmak istiyor musunuz? ') == 'EVET':  
+    df = dataframeler[0] 
+    df = df.rename(columns ={'TP_GSYIH26_HY_ZH':'GSYIH'})
+
+
+for m in range(1,len(VERI)):    
+    if input(VERI[m]+' verisini kullanmak istiyor musunuz?') == 'EVET':
+        
+        df = df.assign(AAAAA = dataframeler[m])
+        df = df.rename(columns ={df.columns[m]: VERI[m]})
+df.head()
